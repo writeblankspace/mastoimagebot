@@ -4,7 +4,7 @@ A bot written in Python that allows users to turn Mastodon posts into beautiful,
 
 **NOTE: This is a personal project done for fun. I may abandon it whenever I want**
 
-![A sample of the resulting image](https://github.com/writeblankspace/mastoimagebot/assets/75297066/209c9f7a-5b0b-4097-a24a-6630e025e480.png)
+![A sample of the resulting image](https://github.com/writeblankspace/mastoimagebot/assets/75297066/209c9f7a-5b0b-4097-a24a-6630e025e480)
 
 ## Usage
 
