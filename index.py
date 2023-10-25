@@ -82,8 +82,9 @@ class Listener(StreamListener):
 		if "mastoimagebot_!" in invocation_post["content"]:
 			main(invocation_post)
 		else:
-			# print("Saw message. Meh.")
-			pass
+            t = time.localtime()
+            current_time = time.strftime("%H:%M:%S", t)
+            print(f"{current_time} Found a post by {invocation_post['account']['acct']}. Ignoring.")
 
 listener = Listener()
 
