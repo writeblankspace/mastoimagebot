@@ -1,5 +1,4 @@
 annotated-types==0.5.0
-apparmor==3.1.6
 appdirs==1.4.4
 argcomplete==2.0.0
 attrs==22.2.0
