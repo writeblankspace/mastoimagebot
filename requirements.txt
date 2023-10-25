@@ -6,7 +6,6 @@ autocommand==2.2.2
 beautifulsoup4==4.12.2
 blinker==1.6.3
 blurhash==1.1.4
-btrfsutil==6.5.2
 CacheControl==0.13.1
 certifi==2023.7.22
 cffi==1.16.0
