@@ -27,6 +27,7 @@ def get_id(url: str):
 def main(invocation_post):
 	t = time.localtime()
 	current_time = time.strftime("%H:%M:%S", t)
+    print(f"{current_time} Command triggered.")
 
 	# make sure that the person who did it is me
 	if invocation_post["account"]["id"] in [mastodon.me()["id"], 109693174502836599]:
