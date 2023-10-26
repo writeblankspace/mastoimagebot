@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageColor
 import requests
 from markdownify import markdownify as md
 import re
+import textwrap
 
 
 def shorten_str(string: str, length: int):
@@ -45,7 +46,7 @@ def gen_image(post: dict):
     
     # configuration
     text_size = 40 # 30
-    text_wrap = 55 # 60
+    text_wrap = 45 # 60
     small_margin = text_size/3 # 10
     big_margin = int(text_size*1.5) # 60
 
@@ -56,7 +57,7 @@ def gen_image(post: dict):
     domain = re.search(r"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)", acc_url).group(1) 
 
     # get a max width
-    max_x = (x_padding)+((text_size/2.55)*text_wrap)+(big_margin)+(small_margin)
+    max_x = (x_padding*2)+((text_size/1.8)*text_wrap)
     
     # get the image, if any
     media_attachments_previewable: list = []
@@ -75,12 +76,6 @@ def gen_image(post: dict):
     else:
         media_attachment = None
         media_attachment_y = 0
-    
-    if media_attachment:
-        len_m_a_p = len(media_attachments_previewable)
-        if len_m_a_p > 1:
-            plural_or_no = "images" if len_m_a_p > 2 else "image"
-            content += f"(view {len_m_a_p-1} more {plural_or_no} on original post)\n\n\n"
 
     # change the content to markdown so I don't have to do my job
     md_content = md(
@@ -88,11 +83,20 @@ def gen_image(post: dict):
         strip=["a"], 
         escape_asterisks=False, 
         escape_underscores=False, 
-        wrap=True,
-        wrap_width=text_wrap
     )
-
-    md_content_y = md_content.count("\n") - 2
+    # wrap it
+    md_content: str = textwrap.fill(
+        md_content, 
+        width = text_wrap,
+        break_long_words = True
+    )
+    # add media stuff if there is media 
+    if media_attachment:
+        len_m_a_p = len(media_attachments_previewable)
+        if len_m_a_p > 1:
+            plural_or_no = "images" if len_m_a_p > 2 else "image"
+            md_content += f"\n\n(view {len_m_a_p-1} more {plural_or_no} on original post)\n"
+    md_content_y = md_content.count("\n") + 1
 
     # get the avatar
     pfp = Image.open(requests.get(avatar, stream=True).raw)
@@ -124,19 +128,19 @@ def gen_image(post: dict):
     # import some fonts
     try:
         # use font files - might throw an OSError if font is not installed
-        font_regular = ImageFont.truetype("assets/font/Roboto-Regular.ttf", size=text_size)
-        font_medium = ImageFont.truetype("assets/font/Roboto-Medium.ttf", size=text_size)
-        font_bold = ImageFont.truetype("assets/font/Roboto-Bold.ttf", size=text_size)
-        font_light = ImageFont.truetype("assets/font/Roboto-Light.ttf", size=text_size)
+        font_regular = ImageFont.truetype("assets/font/RobotoMono-Regular.ttf", size=text_size)
+        font_medium = ImageFont.truetype("assets/font/RobotoMono-Medium.ttf", size=text_size)
+        font_bold = ImageFont.truetype("assets/font/RobotoMono-Bold.ttf", size=text_size)
+        font_light = ImageFont.truetype("assets/font/RobotoMono-Light.ttf", size=text_size)
     except OSError:
         # for some reason, you can't use font files
-        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Regular.ttf?raw=true")
+        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/RobotoMono-Regular.ttf?raw=true")
         font_regular = ImageFont.truetype(BytesIO(req.content), size=text_size)
-        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Medium.ttf?raw=true")
+        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/RobotoMono-Medium.ttf?raw=true")
         font_medium = ImageFont.truetype(BytesIO(req.content), size=text_size)
-        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Bold.ttf?raw=true")
+        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/RobotoMono-Bold.ttf?raw=true")
         font_bold = ImageFont.truetype(BytesIO(req.content), size=text_size)
-        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Light.ttf?raw=true")
+        req = requests.get("https://github.com/googlefonts/roboto/blob/master/src/hinted/RobotoMono-Light.ttf?raw=true")
         font_light = ImageFont.truetype(BytesIO(req.content), size=text_size)
     
     draw = ImageDraw.Draw(res)
