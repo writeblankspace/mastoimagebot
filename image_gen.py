@@ -85,17 +85,24 @@ def gen_image(post: dict):
         escape_underscores=False, 
     )
     # wrap it
-    md_content: str = textwrap.fill(
-        md_content, 
-        width = text_wrap,
-        break_long_words = True
-    )
+    md_content_split: list = md_content.splitlines() # split into paragraphs, to be wrapped separately
+    md_content_wrapped_split: list = []
+    # wrap each paragraph
+    for paragraph in md_content_split:
+        md_content_wrapped_split.append(
+            textwrap.fill(
+                paragraph,
+                width = text_wrap,
+                break_long_words = True
+            )
+        )
+    md_content = "\n".join(md_content_wrapped_split)
     # add media stuff if there is media 
     if media_attachment:
         len_m_a_p = len(media_attachments_previewable)
         if len_m_a_p > 1:
             plural_or_no = "images" if len_m_a_p > 2 else "image"
-            md_content += f"\n\n(view {len_m_a_p-1} more {plural_or_no} on original post)\n"
+            md_content += f"\n(view {len_m_a_p-1} more {plural_or_no} on original post)\n"
     md_content_y = md_content.count("\n") + 1
 
     # get the avatar
